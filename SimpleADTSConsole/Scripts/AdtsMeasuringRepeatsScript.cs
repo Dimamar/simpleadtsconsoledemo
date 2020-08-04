@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using SimpleADTSConsole.Scripts.Steps;
 
-namespace SimpleADTSConsole
+namespace SimpleADTSConsole.Scripts
 {
     internal class AdtsMeasuringRepeatsScript : INotifyPropertyChanged, IAdtsScript
     {
+        private TimeSpan _period = TimeSpan.FromMilliseconds(100);
+
+        private string parameter = "PS";
+        private string unit = "MMHG";
+        private string unitCommandFormat = "UNIT:PRES {0}";
+        private string aimCommandFormat = "SOUR:PRES {0},{1}";
         private double aimFrom = 760;
         private double aimTo = 1060;
         private double rateFast = 300;
@@ -22,15 +25,15 @@ namespace SimpleADTSConsole
 
         private readonly IEnumerable<string> _commandsPs = new[]
         {
-            "1",
-            "2",
-            "3",
+            "MEAS:PRES? PS",
+            "MEAS:PRES? PT",
+            "MEAS:PRES? ALT",
         };
         private readonly IEnumerable<string> _commandsPsPtAlt = new []
         {
-            "4",
-            "5",
-            "6",
+            "MEAS:PRES? PS",
+            "MEAS:PRES? PT",
+            "MEAS:PRES? ALT",
         };
         private readonly string _basePath;
 
@@ -39,7 +42,7 @@ namespace SimpleADTSConsole
             _basePath = basePath;
         }
 
-        public void Start(ADTSConsoleModel adts, CancellationToken cancel)
+        public void Start(IADTSConsoleModel adts, CancellationToken cancel)
         {
             var startTime = DateTime.Now;
             var currentRunDir = string.Format("{0:yy.MM.dd.hh.mm.ss}\\", startTime);
@@ -94,10 +97,11 @@ namespace SimpleADTSConsole
 
         public AdtsMeasuringRepeatsScript SetPeriod(TimeSpan period)
         {
+            _period = period;
             return this;
         }
 
-        private void RunScript(Sheduller sheduller, ADTSConsoleModel adts, IEnumerable<string> commands, TimeSpan period, StatisticObserver observer, CancellationToken cancel)
+        private void RunScript(Sheduller sheduller, IADTSConsoleModel adts, IEnumerable<string> commands, TimeSpan period, StatisticObserver observer, CancellationToken cancel)
         {
             var dirFormat = "{0}" + string.Format("_{0}m_{1}cmd", (int)period.TotalMilliseconds, commands.Count());
             var whEnd = new ManualResetEvent(false);

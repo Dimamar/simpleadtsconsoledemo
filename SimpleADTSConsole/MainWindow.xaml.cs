@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using SimpleADTSConsole.ForTest;
+using SimpleADTSConsole.Properties;
 
 namespace SimpleADTSConsole
 {
@@ -26,18 +17,19 @@ namespace SimpleADTSConsole
         private double _oldHeigth = 700;
         private double _oldWidth = 1000;
 
-        private ADTSConsoleModel _model = new ADTSConsoleModel();
-        private ConsoleViewModel _viewModel;
-        private double[] line;
+
+        private readonly IADTSConsoleModel _model;
+        private readonly ConsoleViewModel _viewModel;
+
         public MainWindow()
         {
-            line = new double[100];
-            line.Count();
+            ConnectionType type = Settings.Default.ConnectionType;
+            _model = new ADTSConsoleModel(type);
+
             _viewModel = new ConsoleViewModel(_model, this.Dispatcher, ShowMsg);
             DataContext = _viewModel;
             _viewModel.PropertyChanged += _viewModel_PropertyChanged;
             InitializeComponent();
-            SwitchMode();
         }
 
         private void ShowMsg(string title, string msg)

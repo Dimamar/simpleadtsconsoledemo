@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using SimpleADTSConsole.Tools;
 
-namespace SimpleADTSConsole
+namespace SimpleADTSConsole.Scripts
 {
     internal class StatisticObserver : IObserver<CommandAction>
     {
         private readonly string _basePath;
         private string _dir;
-        private StatisticData _statistic = new StatisticData();
+        private StatisticData _statistic;
 
         private List<string> _eventBuffer = new List<string>();
         private int _maxLengthBuffer = 15;
@@ -17,7 +18,7 @@ namespace SimpleADTSConsole
         public StatisticObserver(string basePath)
         {
             _basePath = basePath;
-            _statistic = new StatisticData();
+            _statistic = new StatisticData(new CsvWriter(_basePath));
         }
 
         public void OnNext(CommandAction value)
@@ -45,7 +46,7 @@ namespace SimpleADTSConsole
         {
             AppendStatistic(Path.Combine(_basePath, _dir, "statistic.xml"), _dir, _statistic);
             _statistic.OnCompleted();
-            _statistic = new StatisticData();
+            _statistic = new StatisticData(new CsvWriter(_basePath));
         }
 
         public void SetDir(string dir)

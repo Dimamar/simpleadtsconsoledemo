@@ -3,7 +3,8 @@
                     xmlns:local="clr-namespace:SimpleADTSConsole"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                    xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro">
+                    xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                    xmlns:tools="clr-namespace:SimpleADTSConsole.Tools">
     <Style x:Key="MiddlBtnStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Margin" Value="3"/>
         <Setter Property="Width" Value="90"/>
@@ -20,13 +21,14 @@
         <Setter Property="Margin" Value="3"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
+
     <iconPacks:PackIconModern x:Key="ConnectIcon" Kind="Connect" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="30"/>
     <iconPacks:PackIconModern x:Key="DisconnectIcon" Kind="Disconnect" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="30"/>
     <iconPacks:PackIconEntypo x:Key="StartIcon" Kind="ControllerStop" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     <iconPacks:PackIconEntypo x:Key="StopIcon" Kind="ControllerPlay" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     <iconPacks:PackIconModern x:Key="SettingsIcon" Kind="Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     <iconPacks:PackIconModern x:Key="StatisticIcon" Kind="GraphBar" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-    <DataTemplate x:Key="StatisticItemDt" DataType="local:CurrentParameterState">
+    <DataTemplate x:Key="StatisticItemDt" DataType="tools:CurrentParameterState">
         <Grid>
             <Grid.Resources>
                 <Style TargetType="TextBlock">
@@ -51,7 +53,7 @@
             <TextBlock Text="Value" Grid.Column="0" Grid.Row="1"/>
             <TextBox Text="{Binding Value}" Grid.Column="1" Grid.Row="1" IsReadOnly="True"/>
             <TextBlock Text="Date" Grid.Column="0" Grid.Row="2"/>
-            <TextBox Text="{Binding LastTime, StringFormat=dd:MM:ss.fff}" Grid.Column="1" Grid.Row="2" IsReadOnly="True"/>
+            <TextBox Text="{Binding LastCommand, StringFormat=HH:mm:ss.fff}" Grid.Column="1" Grid.Row="2" IsReadOnly="True"/>
             <TextBlock Text="Repeats" Grid.Column="2" Grid.Row="1"/>
             <TextBox Text="{Binding CurrentRepeats}" Grid.Column="3" Grid.Row="1" IsReadOnly="True"/>
             <TextBlock Text="Max repeats:" Grid.Column="2" Grid.Row="2"/>
@@ -75,6 +77,7 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
     <Style x:Key="BtnStartStyle" TargetType="Button" BasedOn="{StaticResource MiddlBtnStyle}">
         <Setter Property="Content" Value="{StaticResource StartIcon}"/>
         <Style.Triggers>
@@ -86,6 +89,7 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
     <Style x:Key="FlyoutStatisticStyle" TargetType="controls:Flyout">
         <Setter Property="Margin" Value="0"></Setter>
         <Style.Triggers>
@@ -165,6 +169,6 @@
         <Style TargetType="{x:Type dialogs:MessageDialog}" BasedOn="{StaticResource NewCustomMessageDialogStyle}" />
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    <local:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
-    <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    <tools:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+    <tools:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 </ResourceDictionary>

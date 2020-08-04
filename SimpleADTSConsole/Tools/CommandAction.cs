@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleADTSConsole
+namespace SimpleADTSConsole.Tools
 {
     public struct CommandAction
     {
@@ -9,5 +9,9 @@ namespace SimpleADTSConsole
         public string Command { get; set; }
 
         public string Answer { get; set; }
+
+        public bool IsAnswer { get; set; }
+
+        public bool AnswerIsNeed { get; set; }
     }
 }

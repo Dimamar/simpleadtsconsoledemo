@@ -34,5 +34,35 @@ namespace SimpleADTSConsole.Properties {
                 this["BaseStatisticPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("GPIB_USB")]
+        public global::SimpleADTSConsole.ConnectionType ConnectionType {
+            get {
+                return ((global::SimpleADTSConsole.ConnectionType)(this["ConnectionType"]));
+            }
+            set {
+                this["ConnectionType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("v1")]
+        public global::SimpleADTSConsole.Tools.LogVersion Logversion {
+            get {
+                return ((global::SimpleADTSConsole.Tools.LogVersion)(this["Logversion"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SuppressError {
+            get {
+                return ((bool)(this["SuppressError"]));
+            }
+        }
     }
 }

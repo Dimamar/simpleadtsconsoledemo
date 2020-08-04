@@ -4,15 +4,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:simpleAdtsConsole="clr-namespace:SimpleADTSConsole"
         xmlns:properties="clr-namespace:SimpleADTSConsole.Properties"
-        Title="{x:Static properties:Resources.Title}" Height="120" Width="360" x:Name="Root"
+        xmlns:adjustingMode="clr-namespace:SimpleADTSConsole.AdjustingMode"
+        xmlns:metrologyMode="clr-namespace:SimpleADTSConsole.MetrologyMode"
+        Title="{x:Static properties:Resources.Title}" Height="800" Width="800" x:Name="Root"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance simpleAdtsConsole:ConsoleViewModel}"
         Closing="MainWindow_OnClosing" 
         GlowBrush="{DynamicResource AccentColorBrush}"
-        Icon="Content/sparc.ico" ResizeMode="NoResize">
+        Icon="Content/sparc.ico">
+    <!-- ResizeMode="NoResize"-->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -38,7 +40,7 @@
                 IsOpen="{Binding ElementName=TbSettings, Path=IsChecked, Mode=TwoWay}"
                 Header="Settings" Position="Right" Width="300">
                 <StackPanel Margin="0">
-                    <GroupBox Header="Themes" Margin="3">
+                    <GroupBox Header="Themes" Margin="3"><!--Background="Transparent"-->
                         <StackPanel>
                             <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Blue">Blue</RadioButton>
                             <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Brown">Brown</RadioButton>
@@ -100,25 +102,24 @@
                 <Button Command="{Binding SwitchConnect}" Width="70" DockPanel.Dock="Left" Style="{StaticResource BtnConnectStyle}"/>
                 <GroupBox Header="{x:Static properties:Resources.MetrologyToolsText}" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
                           Visibility="{Binding IsMetrogyMode, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <simpleAdtsConsole:ToogleNameButton Margin="3"
-                            Grid.Column="0" OnLabel="AUTO ZERO ON " OffLabel="AUTO ZERO OFF" Command="{Binding SwitchAutoZero}"
-                            IsChecked="{Binding IsAutoZeroChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <simpleAdtsConsole:ToogleNameButton Margin="3"
-                            Grid.Column="1" OnLabel="AUTO LEAK ON " OffLabel="AUTO LEAK OFF" Command="{Binding SwitchAutoLeak}"
-                            IsChecked="{Binding IsAutoLeakChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <simpleAdtsConsole:ToogleNameButton Margin="3"
-                            Grid.Column="2" OnLabel="CONTROL" OffLabel="MEASURING" Command="{Binding SwitchMode}"
-                            IsChecked="{Binding IsControlMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                    </Grid>
+                    <ContentPresenter Content="{Binding AdtsMode}">
+                        <ContentPresenter.ContentTemplate>
+                            <DataTemplate>
+                                <metrologyMode:AdtsModePannel/>
+                            </DataTemplate>
+                        </ContentPresenter.ContentTemplate>
+                    </ContentPresenter>
                 </GroupBox>
 
-                <GroupBox Header="{x:Static properties:Resources.FromLog}" DockPanel.Dock="Right" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
+                <ContentPresenter Content="{Binding Logs}" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
+                                  Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate>
+                            <adjustingMode:LogsReaderView DockPanel.Dock="Right"/>
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
+                </ContentPresenter>
+                <!--<GroupBox Header="{x:Static properties:Resources.FromLog}" DockPanel.Dock="Right" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
                           Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock >Log file:</TextBlock>
@@ -126,9 +127,20 @@
                         <Button Command="{Binding OpenFile}" Style="{StaticResource MiddlBtnStyle}" Width="20">...</Button>
                         <Button Command="{Binding StartFromFile}" Style="{StaticResource BtnStartStyle}"/>
                     </StackPanel>
-                </GroupBox>
+                </GroupBox>-->
             </DockPanel>
-            <GroupBox Header="Periodic" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
+            <DockPanel IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}">
+                <ContentPresenter Content="{Binding Adjusting}"  
+                                  Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate>
+                            <adjustingMode:AdjustingView/>
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
+                </ContentPresenter>
+            </DockPanel>
+
+            <!--<GroupBox Header="Periodic" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
                       Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Command:</TextBlock>
@@ -198,7 +210,7 @@
                         <Button Command="{Binding GoToGround}" Style="{StaticResource MiddlBtnStyle}">Go To Ground</Button>
                     </StackPanel>
                 </StackPanel>
-            </GroupBox>
+            </GroupBox>-->
         </StackPanel>
         <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
               Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
@@ -211,7 +223,7 @@
                 <ScrollViewer Margin="3" VerticalScrollBarVisibility="Visible">
                     <DataGrid ItemsSource="{Binding Statistic.Log}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Timestamp, StringFormat=mm:DD:ss.fff}" Width="Auto"/>
+                            <DataGridTextColumn Header="Date" Binding="{Binding Timestamp, StringFormat=HH:mm:ss.fff}" Width="Auto"/>
                             <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
                             <DataGridTextColumn Header="Answer" Binding="{Binding Answer}" Width="*"/>
                         </DataGrid.Columns>

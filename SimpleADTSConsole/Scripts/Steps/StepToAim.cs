@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace SimpleADTSConsole.Scripts.Steps
 {
     internal class StepToAim:Sheduller.IStep
     {
+        private string parameter = "PS";
+        private string unit = "MMHG";
+        private string unitCommandFormat = "UNIT:PRES {0}";
+        private string aimCommandFormat = "SOUR:PRES {0},{1}";
+
         private readonly int _callAfter;
         private int _callNumber = 0;
-        private readonly ADTSConsoleModel _adts;
+        private readonly IADTSConsoleModel _adts;
         private readonly PeriodDescriptor _period;
         private readonly double _aim;
         private readonly double _rate;
@@ -25,7 +27,7 @@ namespace SimpleADTSConsole.Scripts.Steps
         /// <param name="aim"></param>
         /// <param name="rate"></param>
         /// <param name="callAfter"></param>
-        public StepToAim(string name, ADTSConsoleModel adts, PeriodDescriptor period, double aim, double rate, int callAfter = 1)
+        public StepToAim(string name, IADTSConsoleModel adts, PeriodDescriptor period, double aim, double rate, int callAfter = 1)
         {
             Name = name;
             _adts = adts;
@@ -39,12 +41,41 @@ namespace SimpleADTSConsole.Scripts.Steps
 
         public bool Run(CancellationToken cancel)
         {
+            _adts.SendReceve(string.Format(unitCommandFormat, unit));
+            if (cancel.WaitHandle.WaitOne(_period.Period))
+                return false;
+
+            var aim = _aim.ToString("F0");
+            _adts.SendReceve(string.Format("SOUR:RATE {0},{1}", parameter, _rate.ToString("F0")));
+            if (cancel.WaitHandle.WaitOne(_period.Period))
+                return false;
+
+            _adts.SendReceve(string.Format(aimCommandFormat, parameter, aim));
+            if (cancel.WaitHandle.WaitOne(_period.Period))
+                return false;
+
+            _adts.SendReceve("STAT:OPER:EVEN?");
+
             return true;
         }
 
         public bool IsEnd(CancellationToken cancel)
         {
-            return true;
+            _callNumber++;
+            if (_callNumber < _callAfter)
+                return false;
+            _callNumber = 0;
+
+            string answer;
+            _adts.SendReceve("STAT:OPER:EVEN?", out answer);
+            if (cancel.WaitHandle.WaitOne(_period.Period))
+                return false;
+
+            int intVal;
+            if (!int.TryParse(answer, NumberStyles.Any, CultureInfo.InvariantCulture, out intVal))
+                return false;
+            var registerEvents = (ADTSStatus)intVal;
+            return (registerEvents & ADTSStatus.StableAtAimValue) != 0;
         }
 
         public class PeriodDescriptor

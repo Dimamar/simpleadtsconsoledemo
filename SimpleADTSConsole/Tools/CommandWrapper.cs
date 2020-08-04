@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SimpleADTSConsole
+namespace SimpleADTSConsole.Tools
 {
     public class CommandWrapper : ICommand
     {

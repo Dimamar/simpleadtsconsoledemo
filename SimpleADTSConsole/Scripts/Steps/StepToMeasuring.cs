@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 
 namespace SimpleADTSConsole.Scripts.Steps
 {
     internal class StepToMeasuring:Sheduller.IStep
     {
-        private readonly ADTSConsoleModel _adts;
+        private readonly IADTSConsoleModel _adts;
 
         /// <summary>
         /// Перевести ADTS в режим измерения
         /// </summary>
         /// <param name="name"></param>
         /// <param name="adts"></param>
-        public StepToMeasuring(string name, ADTSConsoleModel adts)
+        public StepToMeasuring(string name, IADTSConsoleModel adts)
         {
             Name = name;
             _adts = adts;
@@ -34,8 +29,9 @@ namespace SimpleADTSConsole.Scripts.Steps
             return true;
         }
 
-        public static bool Run(ADTSConsoleModel adts, CancellationToken cancel)
+        public static bool Run(IADTSConsoleModel adts, CancellationToken cancel)
         {
+            adts.SendReceve("SOUR:STAT OFF");
             return true;
         }
     }

@@ -2,16 +2,42 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Shapes;
 using Path = System.IO.Path;
 
-namespace SimpleADTSConsole
+namespace SimpleADTSConsole.Tools
 {
     public class CommandsFromFile
     {
+
+        private readonly LogVersion _version;
+
+        private readonly string keyCommand;
+        private readonly string keyAnswer;
+
+        private readonly int _commandPrefix;
+        private readonly int _answerPrefix;
+
+        public CommandsFromFile(LogVersion version = LogVersion.v1)
+        {
+            _version = version;
+            switch (version)
+            {
+                case LogVersion.v1:
+                    keyCommand = "<<";
+                    keyAnswer = ">>";
+                    _commandPrefix = 16;
+                    _answerPrefix = 16;
+                    break;
+                case LogVersion.v2:
+                    keyCommand = "Command:";
+                    keyAnswer = "Answer:";
+                    _commandPrefix = 28 + keyCommand.Length;
+                    _answerPrefix = 28 + keyAnswer.Length;
+                    break;
+            }
+        }
+
         public IEnumerable<CommandAction> Parce(string file)
         {
             List<string> files = new List<string>();
@@ -35,11 +61,11 @@ namespace SimpleADTSConsole
                 {
                     line = line.Replace("\0", "");
                     if (IsCommand(line))
-                        cmd.Command = line.Remove(0, 16);
+                        cmd.Command = GetCommand(line, _version);
                     else if (IsAnswer(line))
                     {
-                        cmd.Answer = line.Remove(0, 16);
-                        cmd.Timestamp = DateTime.Parse(line.Substring(0, 13));
+                        cmd.Answer = GetAnswer(line, _version);
+                        cmd.Timestamp = GetDateTime(line, _version);
                         yield return cmd;
                         cmd = new CommandAction();
                     }
@@ -48,14 +74,29 @@ namespace SimpleADTSConsole
             }
         }
 
+        private static DateTime GetDateTime(string line, LogVersion version)
+        {
+            return DateTime.Parse(line.Substring(0, 13));
+        }
+
+        private string GetAnswer(string line, LogVersion version)
+        {
+            return line.Remove(0, _answerPrefix);
+        }
+
+        private string GetCommand(string line, LogVersion version)
+        {
+            return line.Remove(0, _commandPrefix);
+        }
+
         private bool IsAnswer(string line)
         {
-            return line.Contains(">>");
+            return line.Contains(keyAnswer);
         }
 
         private bool IsCommand(string line)
         {
-            return line.Contains("<<");
+            return line.Contains(keyCommand);
         }
 
 

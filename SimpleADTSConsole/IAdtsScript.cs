@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Threading;
+﻿using System.Threading;
 
 namespace SimpleADTSConsole
 {
@@ -11,6 +10,6 @@ namespace SimpleADTSConsole
 
         string Step { get; set; }
 
-        void Start(ADTSConsoleModel adts, CancellationToken cancel);
+        void Start(IADTSConsoleModel adts, CancellationToken cancel);
     }
 }
