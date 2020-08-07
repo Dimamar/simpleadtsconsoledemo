@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="SimpleADTSConsole.MetrologyMode.MetrologyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:tools="clr-namespace:SimpleADTSConsole.Tools"
+             xmlns:metrologyMode="clr-namespace:SimpleADTSConsole.MetrologyMode"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance metrologyMode:MetrologyVM}"
+             d:DesignHeight="30" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <tools:ToogleNameButton Margin="3"
+                                            Grid.Column="0" OnLabel="AUTO ZERO ON " OffLabel="AUTO ZERO OFF" Command="{Binding SwitchAutoZero}"
+                                            IsChecked="{Binding IsAutoZeroChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <tools:ToogleNameButton Margin="3"
+                                            Grid.Column="1" OnLabel="AUTO LEAK ON " OffLabel="AUTO LEAK OFF" Command="{Binding SwitchAutoLeak}"
+                                            IsChecked="{Binding IsAutoLeakChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <tools:ToogleNameButton Margin="3"
+                                            Grid.Column="2" OnLabel="CONTROL" OffLabel="MEASURING" Command="{Binding SwitchMode}"
+                                            IsChecked="{Binding IsControlMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+    </Grid>
+</UserControl>

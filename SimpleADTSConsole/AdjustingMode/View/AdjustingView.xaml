@@ -6,82 +6,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SimpleADTSConsole.AdjustingMode"
              xmlns:periodControls="clr-namespace:SimpleADTSConsole.PeriodControls"
-             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:AdjustingModel}"
+             xmlns:view="clr-namespace:SimpleADTSConsole.Scripts.View"
+             xmlns:view1="clr-namespace:SimpleADTSConsole.PeriodControls.View"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:AdjustingModelVM}"
              d:DesignHeight="1000" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Styles.xaml"/>
+                <ResourceDictionary Source="../../Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <iconPacks:PackIconEntypo x:Key="Stop" Kind="ControllerStop" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <iconPacks:PackIconEntypo x:Key="Start" Kind="ControllerPlay" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <StackPanel>
         <Expander Header="Periodic" IsExpanded="True">
-            <StackPanel Orientation="Horizontal">
-                <periodControls:PeriodControl DataContext="{Binding PeriodLoopContext}"/>
-                <StackPanel Orientation="Vertical">
-                    <Button Style="{StaticResource MiddlBtnStyle}" Width="50" Height="30" Margin="0,25,0,0" Command="{Binding StartPeriodic}" Content="{StaticResource Start}" IsEnabled="{Binding CommandStart}"/>
-                    <Button Style="{StaticResource MiddlBtnStyle}" Width="50" Height="30" Command="{Binding StopPeriodic}" Content="{StaticResource Stop}"/>
-                </StackPanel>
-            </StackPanel>
+            <periodControls:PeriodControl DataContext="{Binding PeriodLoopContext}"/>
         </Expander>
         <Expander Header="Scripts" IsExpanded="True">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0">Scripts:</TextBlock>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Margin="3" ItemsSource="{Binding Scripts}"
-                          SelectedItem="{Binding SelectedSctipt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemTemplate="{StaticResource StriptDt}"/>
-                <Button Grid.Column="2" Command="{Binding StartSelectScript}" Style="{StaticResource BtnStartStyle}"/>
-            </Grid>
+            <view:ScriptsView DataContext="{Binding Scripts}"/>
         </Expander>
         <Expander Header="Simple" IsExpanded="True">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Width="60">Command:</TextBlock>
-                <TextBox Width="200" Text="{Binding Command, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Command="{Binding Send}" Style="{StaticResource MiddlBtnStyle}">Send</Button>
-                <Button Command="{Binding SendReceive}" Style="{StaticResource MiddlBtnStyle}">Send Receive</Button>
-            </StackPanel>
-        </Expander>
-        <Expander Header="Command compill" IsExpanded="True">
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="60">Parameter:</TextBlock>
-                    <ComboBox Width="200" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock>Value:</TextBlock>
-                    <TextBox Width="100" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding CompilSetValue}" Style="{StaticResource BigBtnStyle}">Compil Set parameter</Button>
-                    <Button Command="{Binding CompilGetValue}" Style="{StaticResource BigBtnStyle}">Compil Get parameter</Button>
-                    <Button Command="{Binding CompilToControl}" Style="{StaticResource BigBtnStyle}">Compil To Control</Button>
-                </StackPanel>
-            </StackPanel>
+            <view1:CommandCompilerView DataContext="{Binding CommandCompiler}"/>
         </Expander>
         <Expander Header="Up down Test" IsExpanded="True">
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="90">Up PS:</TextBlock>
-                    <TextBox Width="100" Text="{Binding UpPs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Width="90">Perod UpDown:</TextBlock>
-                    <TextBox Width="100" Text="{Binding PeriodUpDown, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Command="{Binding UpDownTest}" Style="{StaticResource MiddlBtnStyle}">Up Down test</Button>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="90">Down PS:</TextBlock>
-                    <TextBox Width="100" Text="{Binding DownPs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Width="90">Rate PS:</TextBlock>
-                    <TextBox Width="100" Text="{Binding RatePs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Command="{Binding GoToGround}" Style="{StaticResource MiddlBtnStyle}">Go To Ground</Button>
-                </StackPanel>
-            </StackPanel>
+            <view1:UpDownView DataContext="{Binding UpDown}"/>
         </Expander>
     </StackPanel>
 </UserControl>

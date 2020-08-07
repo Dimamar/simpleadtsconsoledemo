@@ -61,10 +61,6 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="StriptDt" DataType="local:IAdtsScript">
-        <TextBlock Text="{Binding Name}"/>
-    </DataTemplate>
-
     <Style x:Key="BtnConnectStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Margin" Value="3,3,0,3"/>
         <Setter Property="Content" Value="{StaticResource DisconnectIcon}"/>

@@ -1,0 +1,155 @@
+﻿<controls:MetroWindow x:Class="SimpleADTSConsole.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:simpleAdtsConsole="clr-namespace:SimpleADTSConsole"
+        xmlns:properties="clr-namespace:SimpleADTSConsole.Properties"
+        xmlns:adjustingMode="clr-namespace:SimpleADTSConsole.AdjustingMode"
+        xmlns:metrologyMode="clr-namespace:SimpleADTSConsole.MetrologyMode"
+        Title="{x:Static properties:Resources.Title}" Height="800" Width="800" x:Name="Root"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance simpleAdtsConsole:ConsoleVM}"
+        Closing="MainWindow_OnClosing" 
+        GlowBrush="{DynamicResource AccentColorBrush}"
+        Icon="../../Content/sparc.ico">
+    <!-- ResizeMode="NoResize"-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding SwitchMetrologyMode}"
+                    Gesture="Ctrl+M,M"/>
+    </Window.InputBindings>
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <ToggleButton x:Name="TbSettings" Content="{StaticResource SettingsIcon}"
+                          Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+            <ToggleButton x:Name="TbStatistic" Content="{StaticResource StatisticIcon}"
+                          Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl>
+            <controls:Flyout
+                IsOpen="{Binding ElementName=TbSettings, Path=IsChecked, Mode=TwoWay}"
+                Header="Settings" Position="Right" Width="300">
+                <StackPanel Margin="0">
+                    <GroupBox Header="Themes" Margin="3"><!--Background="Transparent"-->
+                        <StackPanel>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Blue">Blue</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Brown">Brown</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Amber">Amber</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Basedark">Basedark</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Baselight">Baselight</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Cobalt">Cobalt</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Crimson">Crimson</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Cyan">Cyan</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Emerald">Emerald</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Green">Green</RadioButton>
+                            <RadioButton GroupName="ThemeGroup" Command="{Binding ChangeTheme}" CommandParameter="Indigo">Indigo</RadioButton>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Command log" Margin="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Depth log:</TextBlock>
+                            <controls:NumericUpDown Grid.Column="1" Minimum="10" Maximum="10000" Interval="10" StringFormat="N0"
+                                                    Value="{Binding Statistic.LogDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                    </GroupBox>
+                    <!--<GroupBox Header="Languages">
+                        <StackPanel>
+                            <RadioButton GroupName="LangGroup" Command="{Binding ChangeLng}" CommandParameter="">Русский</RadioButton>
+                            <RadioButton GroupName="LangGroup" Command="{Binding ChangeLng}" CommandParameter="en">Английский</RadioButton>
+                        </StackPanel>
+                    </GroupBox>-->
+                </StackPanel>
+            </controls:Flyout>
+            <controls:Flyout
+                IsOpen="{Binding ElementName=TbStatistic, Path=IsChecked, Mode=TwoWay}"
+                Header="Statistic" Position="Right" Width="300" VerticalAlignment="Stretch" Style="{StaticResource FlyoutStatisticStyle}">
+                <GroupBox Header="Parameters" Margin="3">
+                    <ListView ItemsSource="{Binding Statistic.States}"
+                              ItemTemplate="{StaticResource StatisticItemDt}"
+                              VerticalAlignment="Stretch"/>
+                </GroupBox>
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
+    <Grid IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--<Button Grid.Column="0" Grid.Row="0" Command="{Binding SwitchConnect}" Width="65" Visibility="Collapsed">Connect</Button>-->
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+            <DockPanel>
+                <Button Command="{Binding SwitchConnect}" Width="70" DockPanel.Dock="Left" Style="{StaticResource BtnConnectStyle}"/>
+                <GroupBox Header="{x:Static properties:Resources.MetrologyToolsText}" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
+                          Visibility="{Binding IsMetrogyMode, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ContentPresenter Content="{Binding Metrology}">
+                        <ContentPresenter.ContentTemplate>
+                            <DataTemplate>
+                                <metrologyMode:MetrologyView/>
+                            </DataTemplate>
+                        </ContentPresenter.ContentTemplate>
+                    </ContentPresenter>
+                </GroupBox>
+
+                <ContentPresenter Content="{Binding LogReader}" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
+                                  Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate>
+                            <adjustingMode:LogsReaderView DockPanel.Dock="Right"/>
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
+                </ContentPresenter>
+                <!--<GroupBox Header="{x:Static properties:Resources.FromLog}" DockPanel.Dock="Right" IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}"
+                          Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock >Log file:</TextBlock>
+                        <TextBox Width="250" Text="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Command="{Binding OpenFile}" Style="{StaticResource MiddlBtnStyle}" Width="20">...</Button>
+                        <Button Command="{Binding StartFromFile}" Style="{StaticResource BtnStartStyle}"/>
+                    </StackPanel>
+                </GroupBox>-->
+            </DockPanel>
+            <DockPanel IsEnabled="{Binding IsOpened, UpdateSourceTrigger=PropertyChanged}">
+                <ContentPresenter Content="{Binding Adjusting}"  
+                                  Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate>
+                            <adjustingMode:AdjustingView/>
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
+                </ContentPresenter>
+            </DockPanel>
+        </StackPanel>
+        <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+              Visibility="{Binding IsMetrogyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <GroupBox Header="Log">
+                <ScrollViewer Margin="3" VerticalScrollBarVisibility="Visible">
+                    <ListBox ItemsSource="{Binding Log}"/>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</controls:MetroWindow>
+
+
+

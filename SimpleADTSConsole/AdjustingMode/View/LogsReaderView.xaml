@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:properties="clr-namespace:SimpleADTSConsole.Properties"
              xmlns:adjustingMode="clr-namespace:SimpleADTSConsole.AdjustingMode"
-             mc:Ignorable="d" d:DataContext="{adjustingMode:LogReader}"
-             d:DesignHeight="100" d:DesignWidth="435">
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance adjustingMode:LogReaderVM}"
+             d:DesignHeight="200" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Styles.xaml"/>
+                <ResourceDictionary Source="../../Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

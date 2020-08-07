@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
+using SimpleADTSConsole.PeriodControls.Model;
 using SimpleADTSConsole.Tools;
 
 namespace SimpleADTSConsole.PeriodControls
@@ -12,15 +14,43 @@ namespace SimpleADTSConsole.PeriodControls
     public class PeriodVm : INotifyPropertyChanged, IBusy
     {
         private ObservableCollection<CommandParametr> _loopCommandCollection;
-        private ObservableCollection<CommandParametr> _prepeareCommandCollection;
+        private ObservableCollection<CommandParametr> _prepareCommandCollection;
         private readonly Dispatcher _dispatcher;
+        private bool _commandStart;
+        private bool _isBusy = false;
+        private readonly PeriodicCommands _periodicContext;
 
-        public PeriodVm(Dispatcher dispatcher)
+        public PeriodVm(PeriodicCommands periodicContext, Dispatcher dispatcher)
         {
             _dispatcher = dispatcher;
+            _periodicContext = periodicContext;
             _loopCommandCollection = new ObservableCollection<CommandParametr>();
-            _prepeareCommandCollection = new ObservableCollection<CommandParametr>();
+            _prepareCommandCollection = new ObservableCollection<CommandParametr>();
             _loopCommandCollection.Add(new CommandParametr(RemoveLoopCommand, false));
+        }
+
+        public ICommand StartPeriodic => new CommandWrapper(StartLoopCommands);
+
+        private void StartLoopCommands()
+        {
+            if (CommandStart == false)
+                return;
+
+            var commands = GetCommands();
+            _periodicContext.DoStartPeriodic(commands, this);
+            CommandStart = true;
+        }
+
+        public ICommand StopPeriodic
+        {
+            get
+            {
+                return new CommandWrapper(() =>
+                {
+                    _periodicContext.DoStopPeriodic();
+                    CommandStart = false;
+                });
+            }
         }
 
         public ObservableCollection<CommandParametr> LoopCommandCollection
@@ -32,41 +62,46 @@ namespace SimpleADTSConsole.PeriodControls
                 OnPropertyChanged("LoopCommandCollection");
             }
         }
-        public ObservableCollection<CommandParametr> PrepeareCommandCollection
+
+        public ObservableCollection<CommandParametr> PrepareCommandCollection
         {
-            get { return _prepeareCommandCollection; }
+            get { return _prepareCommandCollection; }
             set
             {
-                _prepeareCommandCollection = value;
-                OnPropertyChanged("PrepeareCommandCollection");
+                _prepareCommandCollection = value;
+                OnPropertyChanged("PrepareCommandCollection");
             }
         }
 
         public ICommand AddLoopCommand => new CommandWrapper(AddNewLoopCommand);
-        public ICommand AddPrepeareCommand => new CommandWrapper(AddNewPrepeareCommand);
+        public ICommand AddPrepareCommand => new CommandWrapper(AddNewPrepareCommand);
 
-        private bool _isBusy = false;
         public bool IsBusy
         {
             get { return !_isBusy; }
             set
             {
-                if (_dispatcher.CheckAccess())
-                {
+                _dispatcher.InvokeIfNeed(()=> {
                     _isBusy = value;
                     OnPropertyChanged("IsBusy");
-                }
-                else
-                {
-                    _dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => IsBusy = value));
-                }
+                });
             }
         }
 
-        private IEnumerable<Command> GetPrepeareCommands()
+        public bool CommandStart
         {
-            return from p in PrepeareCommandCollection
-                   select p.GetCommand(false);
+            get { return !_commandStart; }
+            set
+            {
+                _commandStart = value;
+                OnPropertyChanged("CommandStart");
+            }
+        }
+
+
+        private IEnumerable<Command> GetPrepareCommands()
+        {
+            return PrepareCommandCollection.Select(o=> o.GetCommand(false));
         }
 
         private IEnumerable<Command> GetLoopCommands()
@@ -78,9 +113,9 @@ namespace SimpleADTSConsole.PeriodControls
         public Queue<Command> GetCommands()
         {
             Queue<Command> commands = new Queue<Command>();
-            foreach (var prepeareCommand in GetPrepeareCommands())
+            foreach (var prepareCommand in GetPrepareCommands())
             {
-                commands.Enqueue(prepeareCommand);
+                commands.Enqueue(prepareCommand);
             }
 
             foreach (var loopCommand in GetLoopCommands())
@@ -97,9 +132,9 @@ namespace SimpleADTSConsole.PeriodControls
             LoopCommandCollection.Add(new CommandParametr(RemoveLoopCommand, isFirstElement));
         }
 
-        private void AddNewPrepeareCommand()
+        private void AddNewPrepareCommand()
         {
-            PrepeareCommandCollection.Add(new CommandParametr(RemovePrepeareCommand, true));
+            PrepareCommandCollection.Add(new CommandParametr(RemovePrepareCommand, true));
         }
 
         private void RemoveLoopCommand(CommandParametr cmd)
@@ -108,17 +143,21 @@ namespace SimpleADTSConsole.PeriodControls
                 LoopCommandCollection.Remove(cmd);
         }
 
-        private void RemovePrepeareCommand(CommandParametr cmd)
+        private void RemovePrepareCommand(CommandParametr cmd)
         {
             if (cmd != null)
-                PrepeareCommandCollection.Remove(cmd);
+                PrepareCommandCollection.Remove(cmd);
         }
 
+        #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }

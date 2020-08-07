@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="SimpleADTSConsole.Scripts.View.ScriptsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SimpleADTSConsole.Scripts.ViewModel"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:ScriptsVM}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0">Scripts:</TextBlock>
+        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Margin="3" ItemsSource="{Binding Scripts}"
+                  SelectedItem="{Binding SelectedScript, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Column="2" Command="{Binding StartSelectScript}" Style="{StaticResource BtnStartStyle}"/>
+    </Grid>
+</UserControl>

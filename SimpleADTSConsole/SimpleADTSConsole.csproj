@@ -96,45 +96,70 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AdjustingMode\ViewModel\AdjustingModel.cs" />
+    <Compile Include="AdjustingMode\Model\ILogReader.cs" />
+    <Compile Include="AdjustingMode\Model\LogReader.cs" />
+    <Compile Include="AdjustingMode\Model\ReadLogConfig.cs" />
+    <Compile Include="Main\Model\BusySynchronizer.cs" />
+    <Compile Include="Main\Model\ConsoleModel.cs" />
+    <Compile Include="Main\Model\IBusySynchronizer.cs" />
+    <Compile Include="Main\Model\IConsoleModel.cs" />
+    <Compile Include="MetrologyMode\Model\MetrologyModel.cs" />
+    <Compile Include="PeriodControls\Model\CommandCompilerModel.cs" />
+    <Compile Include="PeriodControls\Model\UpDownContext.cs" />
+    <Compile Include="PeriodControls\Model\UpDownModel.cs" />
+    <Compile Include="PeriodControls\ViewModel\CommandCompilerVM.cs" />
+    <Compile Include="PeriodControls\ViewModel\UpDownVM.cs" />
+    <Compile Include="PeriodControls\View\CommandCompilerView.xaml.cs">
+      <DependentUpon>CommandCompilerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PeriodControls\View\UpDownView.xaml.cs">
+      <DependentUpon>UpDownView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scripts\Model\ScriptsModel.cs" />
+    <Compile Include="AdjustingMode\ViewModel\AdjustingModelVM.cs" />
     <Compile Include="AdjustingMode\View\AdjustingView.xaml.cs">
       <DependentUpon>AdjustingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionType.cs" />
-    <Compile Include="ForTest\MoqADTSConsoleModel.cs" />
-    <Compile Include="ForTest\MoqIeee488Shelter.cs" />
-    <Compile Include="IADTSConsoleModel.cs" />
-    <Compile Include="IBusy.cs" />
-    <Compile Include="ADTSStatus.cs" />
-    <Compile Include="AdjustingMode\ViewModel\LogReader.cs" />
-    <Compile Include="IEEE488\Iieee488Shelter.cs" />
-    <Compile Include="PeriodControls\Model\Command.cs" />
-    <Compile Include="IStatus.cs" />
-    <Compile Include="MetrologyMode\AdtsModeModel.cs" />
-    <Compile Include="MetrologyMode\AdtsModePannel.xaml.cs">
-      <DependentUpon>AdtsModePannel.xaml</DependentUpon>
+    <Compile Include="IEEE488\ConnectionType.cs" />
+    <Compile Include="ForTest\MoqIee488.cs" />
+    <Compile Include="Main\Model\IADTSTransportModel.cs" />
+    <Compile Include="Scripts\View\ScriptsView.xaml.cs">
+      <DependentUpon>ScriptsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PeriodControls\ViewModel\CommandParametr.cs" />
+    <Compile Include="Scripts\ViewModel\ScriptsVM.cs" />
+    <Compile Include="Tools\BaseObservable.cs" />
+    <Compile Include="Tools\DispatcherEx.cs" />
+    <Compile Include="Tools\IObservableUpdater.cs" />
+    <Compile Include="Tools\TaskExec.cs" />
+    <Compile Include="Tools\View\IBusy.cs" />
+    <Compile Include="Main\Model\ADTSConsoleModel.cs" />
+    <Compile Include="Scripts\Model\ADTSStatus.cs" />
+    <Compile Include="AdjustingMode\ViewModel\LogReaderVM.cs" />
+    <Compile Include="PeriodControls\Model\Command.cs" />
+    <Compile Include="Tools\View\IStatus.cs" />
+    <Compile Include="MetrologyMode\ViewModel\MetrologyVM.cs" />
+    <Compile Include="MetrologyMode\View\MetrologyView.xaml.cs">
+      <DependentUpon>MetrologyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PeriodControls\Model\CommandParametr.cs" />
     <Compile Include="PeriodControls\View\PeriodControl.xaml.cs">
       <DependentUpon>PeriodControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PeriodControls\ViewModel\PeriodVM.cs" />
-    <Compile Include="PeriodicCommands.cs" />
-    <Compile Include="Tools\BusyExt.cs" />
-    <Compile Include="Tools\CsvAsyncWriter.cs" />
-    <Compile Include="Tools\CsvWriter.cs" />
-    <Compile Include="Tools\CurrentParameterState.cs" />
-    <Compile Include="Tools\ILogWriter.cs" />
+    <Compile Include="PeriodControls\Model\PeriodicCommands.cs" />
+    <Compile Include="Tools\View\BusyExt.cs" />
+    <Compile Include="Main\Model\CurrentParameterState.cs" />
+    <Compile Include="Tools\DisposeItem.cs" />
+    <Compile Include="AdjustingMode\Model\ILogWriter.cs" />
     <Compile Include="Tools\InverseBooleanConverter.cs" />
     <Compile Include="Tools\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="Scripts\AdtsMeasuringRepeatsScript.cs" />
-    <Compile Include="Tools\CommandAction.cs" />
-    <Compile Include="Tools\CommandsFromFile.cs" />
-    <Compile Include="Tools\CommandSniffer.cs" />
+    <Compile Include="Scripts\ViewModel\AdtsMeasuringRepeatsScript.cs" />
+    <Compile Include="Main\Model\CommandAction.cs" />
+    <Compile Include="AdjustingMode\Model\CommandsFromFile.cs" />
     <Compile Include="Tools\CommandWrapper.cs" />
-    <Compile Include="ConsoleViewModel.cs" />
-    <Compile Include="IAdtsScript.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Main\ViewModel\ConsoleVM.cs" />
+    <Compile Include="Scripts\Model\IAdtsScript.cs" />
+    <Compile Include="Main\View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -143,27 +168,27 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Scripts\Sheduller.cs" />
-    <Compile Include="Scripts\StatisticObserver.cs" />
-    <Compile Include="Scripts\Steps\StepToGround.cs" />
-    <Compile Include="Scripts\Steps\StepToControl.cs" />
-    <Compile Include="Scripts\Steps\StepToMeasuring.cs" />
-    <Compile Include="Scripts\Steps\StepToAim.cs" />
-    <Compile Include="Scripts\Steps\StepWait.cs" />
-    <Compile Include="StatisticData.cs" />
+    <Compile Include="Scripts\Model\Scheduler.cs" />
+    <Compile Include="Scripts\Model\Steps\StepToGround.cs" />
+    <Compile Include="Scripts\Model\Steps\StepToControl.cs" />
+    <Compile Include="Scripts\Model\Steps\StepToMeasuring.cs" />
+    <Compile Include="Scripts\Model\Steps\StepToAim.cs" />
+    <Compile Include="Scripts\Model\Steps\StepWait.cs" />
     <Compile Include="AdjustingMode\View\LogsReaderView.xaml.cs">
       <DependentUpon>LogsReaderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tools\LogVersion.cs" />
-    <Compile Include="Tools\ToogleNameButton.xaml.cs">
+    <Compile Include="AdjustingMode\Model\LogVersion.cs" />
+    <Compile Include="Tools\PropertyChangedExt.cs" />
+    <Compile Include="Tools\PropertyName.cs" />
+    <Compile Include="Controls\ToogleNameButton.xaml.cs">
       <DependentUpon>ToogleNameButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="zGPIBDataTransfer.cs" />
+    <Compile Include="IEEE488\zGPIBDataTransfer.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IEEE488\IEEE488.Enums.cs" />
+    <Compile Include="Composition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -214,15 +239,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Main\View\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MetrologyMode\AdtsModePannel.xaml">
+    <Page Include="MetrologyMode\View\MetrologyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PeriodControls\View\CommandCompilerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PeriodControls\View\PeriodControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PeriodControls\View\UpDownView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scripts\View\ScriptsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,7 +271,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tools\ToogleNameButton.xaml">
+    <Page Include="Controls\ToogleNameButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -263,8 +300,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AdjustingMode\Model\" />
+    <ProjectReference Include="..\SimpleADTSConsole.Interfaces\SimpleADTSConsole.Interfaces.csproj">
+      <Project>{8751b7d0-d0d4-47d7-8024-21289213c4bc}</Project>
+      <Name>SimpleADTSConsole.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

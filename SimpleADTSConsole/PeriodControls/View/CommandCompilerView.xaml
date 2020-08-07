@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="SimpleADTSConsole.PeriodControls.View.CommandCompilerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SimpleADTSConsole.PeriodControls.ViewModel"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModel:CommandCompilerVM}" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBlock Width="60">Command:</TextBlock>
+            <TextBox Width="200" Text="{Binding Command, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Command="{Binding Send}" Style="{StaticResource MiddlBtnStyle}">Send</Button>
+            <Button Command="{Binding SendReceive}" Style="{StaticResource MiddlBtnStyle}">Send Receive</Button>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Width="60">Parameter:</TextBlock>
+                <ComboBox Width="200" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock>Value:</TextBlock>
+                <TextBox Width="100" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding CompileSetValue}" Style="{StaticResource BigBtnStyle}">Compile Set parameter</Button>
+                <Button Command="{Binding CompileGetValue}" Style="{StaticResource BigBtnStyle}">Compile Get parameter</Button>
+                <Button Command="{Binding CompileToControl}" Style="{StaticResource BigBtnStyle}">Compile To Control</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
